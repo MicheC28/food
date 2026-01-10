@@ -1,111 +1,103 @@
-import requests, json, random
+from flask import Flask, request, jsonify
+from datetime import datetime
 import pandas as pd
+import os
+from scraper import get_grocery_flyer_id, get_flyer_items
 
-FLYERS = 'https://flyers-ng.flippback.com/api/flipp/data?locale=en&postal_code={}&sid={}'
-FLYER_ITEMS = 'https://flyers-ng.flippback.com/api/flipp/flyers/{}/flyer_items?locale=en&sid={}'
-GROCERY_STORES = {'No Frills', 'FreshCo', 'Walmart', 'Loblaws'}
+app = Flask(__name__)
 
+# In-memory storage
+items = []
 
-def generate_sid():
-    """
-    Generate a session ID for the Flipp API.
-    """
-    return ''.join(str(random.randint(0,9)) for _ in range(16))
+# Item counter for unique IDs
+item_counter = 1
 
-def get_flyers_by_postal_code(postal_code: str):
-    """
-    Fetch flyer data from Flipp API given a postal code and a session ID.
+@app.route('/newdeals', methods=['POST'])
+def fetch_new_deals():
+    """Fetch new deals from Flipp API for a given postal code"""
+    data = request.get_json()
     
-    """
-    sid = generate_sid()
-    url = FLYERS.format(postal_code, sid)
-    response = requests.get(url)
-    response.raise_for_status() 
-    return response.json()
-
-def get_grocery_flyer_id(postal_code: str):
-    """ 
-    Return flyer id's for grocery stores applicable to given postal code that are labeled as "Groceries" to filter out non-grocery flyers
+    if not data or 'postal_code' not in data:
+        return jsonify({
+            'success': False,
+            'message': 'Postal code is required'
+        }), 400
     
-    """
-    response_data = get_flyers_by_postal_code(postal_code)
+    postal_code = data['postal_code'].strip().upper()
     
-    if 'flyers' not in response_data:
-        return None
+    # Validate postal code format (A1A1A1)
+    if len(postal_code) != 6 or \
+       not postal_code[0].isalpha() or not postal_code[1].isdigit() or \
+       not postal_code[2].isalpha() or not postal_code[3].isdigit() or \
+       not postal_code[4].isalpha() or not postal_code[5].isdigit():
+        return jsonify({
+            'success': False,
+            'message': 'Invalid postal code format. Use format A1A1A1 (e.g., M5V2H1)'
+        }), 400
+    
+    try:
+        # Get grocery flyers for the postal code
+        grocery_flyers = get_grocery_flyer_id(postal_code)
         
-    grocery_flyers = []
-    
-    for flyer in response_data['flyers']:
-        merchant = flyer.get('merchant')
-        categories = flyer.get('categories', [])
+        if not grocery_flyers:
+            return jsonify({
+                'success': True,
+                'message': 'No grocery flyers found for this postal code',
+                'deals_found': 0,
+                'postal_code': postal_code
+            }), 200
         
-        # Convert categories to list if it's a string
-        if isinstance(categories, str):
-            categories = [cat.strip() for cat in categories.split(',')]
+        # Fetch items from all flyers
+        csv_data = []
+        for flyer in grocery_flyers:
+            flyer_id = flyer['id']
+            merchant = flyer['merchant']
+            
+            try:
+                items_response = get_flyer_items(flyer_id)
+                
+                for item in items_response:
+                    csv_data.append({
+                        'merchant': merchant,
+                        'flyer_id': flyer_id,
+                        'name': item.get('name', ''),
+                        'price': item.get('price', ''),
+                        'valid_from': item.get('valid_from', ''),
+                        'valid_to': item.get('valid_to', '')
+                    })
+            except Exception as e:
+                # Continue with other flyers if one fails
+                continue
         
-        if merchant in GROCERY_STORES:
-            if 'Groceries' in categories:
-                grocery_flyers.append({
-                    'id': flyer['id'],
-                    'merchant': merchant
-                })
+        # Save to CSV if items found
+        if csv_data:
+            filename = f'flyer_items_{postal_code}.csv'
+            df = pd.DataFrame(csv_data)
+            df.to_csv(filename, index=False)
+            
+            return jsonify({
+                'success': True,
+                'message': f'Successfully fetched deals for {postal_code}',
+                'deals_found': len(csv_data),
+                'postal_code': postal_code,
+                'csv_file': filename,
+                'flyers_processed': len(grocery_flyers)
+            }), 200
+        else:
+            return jsonify({
+                'success': True,
+                'message': 'No items found in flyers',
+                'deals_found': 0,
+                'postal_code': postal_code,
+                'flyers_processed': len(grocery_flyers)
+            }), 200
     
-    return grocery_flyers if grocery_flyers else None
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error fetching deals: {str(e)}'
+        }), 500
 
-def get_flyer_items(flyer_id: int):
-    """ Return flyer items for a given flyer id"""
-    sid = generate_sid()
-    
-    url = FLYER_ITEMS.format(flyer_id, sid)
-    response = requests.get(url)
-    response.raise_for_status()
-    return response.json()
-
-def main():
-    # Get postal code from user
-    while True:
-        postal_code = input('Enter your postal code (format: A1A1A1): ').strip().upper()
-        if len(postal_code) == 6 and postal_code[0].isalpha() and postal_code[1].isdigit() and \
-           postal_code[2].isalpha() and postal_code[3].isdigit() and postal_code[4].isalpha() and postal_code[5].isdigit():
-            break
-        print('Invalid postal code format. Please use format A1A1A1 (e.g., M5V2H1)')
-    
-    print(f'\nFetching flyers for postal code: {postal_code}')
-    
-    # Get grocery flyers with their merchant names
-    grocery_flyers = get_grocery_flyer_id(postal_code)
-    
-    if not grocery_flyers:
-        print('No grocery flyers found for this postal code.')
-        return
-    
-    print(f'Found {len(grocery_flyers)} grocery flyers')
-    
-    csv_data = []
-    for flyer in grocery_flyers:
-        flyer_id = flyer['id']
-        merchant = flyer['merchant']
-        print(f'Processing {merchant} flyer...')
-        
-        items = get_flyer_items(flyer_id)
-        
-        for item in items:
-            csv_data.append({
-                'merchant': merchant,
-                'flyer_id': flyer_id,
-                'name': item.get('name', ''),
-                'price': item.get('price', ''),
-                'valid_from': item.get('valid_from', ''),
-                'valid_to': item.get('valid_to', '')
-            })
-    
-    if csv_data:
-        df = pd.DataFrame(csv_data)
-        filename = f'flyer_items_{postal_code}.csv'
-        df.to_csv(filename, index=False)
-        print(f'\nSuccessfully saved {len(csv_data)} items to {filename}')
-    else:
-        print('No items found to save.')
 
 if __name__ == '__main__':
-    main()
+    app.run(debug=True, host='0.0.0.0', port=5000)
