@@ -14,12 +14,6 @@ const HeaderTitle = () => (
   <Text style={styles.title}>Recipe Radar</Text>
 );
 
-const HeaderLeft = () => (
-  <View style={styles.leftContainer}>
-    <Text style={styles.leftText}>Get Deals</Text>
-  </View>
-);
-
 export default function App() {
   return (
     <NavigationContainer>
@@ -31,7 +25,6 @@ export default function App() {
           headerTintColor: '#fff',
           headerTitleAlign: 'center',
           headerTitle: () => <HeaderTitle />,
-          headerLeft: () => <HeaderLeft />,
           tabBarActiveTintColor: '#F4964A',
           tabBarInactiveTintColor: '#888',
           tabBarStyle: styles.tabBar,
