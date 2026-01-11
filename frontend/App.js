@@ -3,6 +3,7 @@ import { Text, View, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StatusBar } from 'expo-status-bar';
+
 import GetLatestDealsScreen from './src/screens/GetLatestDealsScreen';
 import RecipesScreen from './src/screens/RecipesScreen';
 import ShoppingListScreen from './src/screens/ShoppingListScreen';
@@ -23,6 +24,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <StatusBar style="light" />
+
       <Tab.Navigator
         screenOptions={{
           headerStyle: styles.header,
@@ -40,8 +42,10 @@ export default function App() {
           component={GetLatestDealsScreen}
           options={{
             tabBarLabel: 'Get Deals',
+            // header visibility controlled *inside* the screen
           }}
         />
+
         <Tab.Screen
           name="Recipes"
           component={RecipesScreen}
@@ -50,6 +54,7 @@ export default function App() {
             tabBarLabel: 'Recipes',
           }}
         />
+
         <Tab.Screen
           name="ShoppingList"
           component={ShoppingListScreen}
@@ -85,7 +90,7 @@ const styles = StyleSheet.create({
   },
   leftText: {
     fontSize: 14,
-    color: '#dcedc8', // lighter green for subtlety
+    color: '#dcedc8',
   },
   tabBar: {
     height: 60,

@@ -13,7 +13,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import RecipeCard from '../components/RecipeCard';
 import { getRecipes, updateRecipeSelections } from '../services/api';
 
-const RecipesScreen = () => {
+const RecipesScreen = ({ navigation }) => {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -22,12 +22,12 @@ const RecipesScreen = () => {
 
   const loadRecipes = async (showLoader = true) => {
     if (showLoader) setLoading(true);
-    
+
     try {
       const data = await getRecipes();
       const recipesArray = Object.values(data) || [];
       setRecipes(recipesArray);
-      
+
       const currentlySelected = new Set(
         recipesArray[1].filter(recipe => recipe.in_list).map(recipe => recipe._id)
       );
@@ -68,13 +68,8 @@ const RecipesScreen = () => {
     setUpdating(true);
     try {
       const result = await updateRecipeSelections(Array.from(selectedRecipeIds));
-      
-      Alert.alert(
-        'Success!',
-        `Updated ${result.updated_count} recipes. Your shopping list is ready!`
-      );
-      
       await loadRecipes(false);
+      navigation.navigate('ShoppingList'); // Navigate on alert OK press
     } catch (error) {
       console.error('Error updating selections:', error);
       Alert.alert('Error', 'Failed to update recipe selections. Please try again.');
@@ -89,7 +84,6 @@ const RecipesScreen = () => {
     weekAgo.setDate(weekAgo.getDate() - 7);
     return createdAt >= weekAgo;
   }).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-  
 
   const previousRecipes = (recipes[1] ?? [])
     .filter(recipe => {
@@ -133,12 +127,13 @@ const RecipesScreen = () => {
           <View style={styles.section}>
             <Text style={styles.sectionHeader}>This Week's Recipes</Text>
             {thisWeeksRecipes.map(recipe => (
-              <RecipeCard
-                key={recipe._id}
-                recipe={recipe}
-                isSelected={selectedRecipeIds.has(recipe._id)}
-                onToggle={() => toggleRecipeSelection(recipe._id)}
-              />
+              <View key={recipe._id} style={styles.recipeWrapper}>
+                <RecipeCard
+                  recipe={recipe}
+                  isSelected={selectedRecipeIds.has(recipe._id)}
+                  onToggle={() => toggleRecipeSelection(recipe._id)}
+                />
+              </View>
             ))}
           </View>
         )}
@@ -147,12 +142,13 @@ const RecipesScreen = () => {
           <View style={styles.section}>
             <Text style={styles.sectionHeader}>Previously Saved Recipes</Text>
             {previousRecipes.map(recipe => (
-              <RecipeCard
-                key={recipe._id}
-                recipe={recipe}
-                isSelected={selectedRecipeIds.has(recipe._id)}
-                onToggle={() => toggleRecipeSelection(recipe._id)}
-              />
+              <View key={recipe._id} style={styles.recipeWrapper}>
+                <RecipeCard
+                  recipe={recipe}
+                  isSelected={selectedRecipeIds.has(recipe._id)}
+                  onToggle={() => toggleRecipeSelection(recipe._id)}
+                />
+              </View>
             ))}
           </View>
         )}
@@ -170,6 +166,7 @@ const RecipesScreen = () => {
               style={[styles.confirmButton, updating && styles.confirmButtonDisabled]}
               onPress={handleConfirmSelection}
               disabled={updating}
+              activeOpacity={0.8}
             >
               {updating ? (
                 <ActivityIndicator color="#fff" size="small" />
@@ -218,29 +215,40 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingVertical: 16,
+    paddingVertical: 24,
   },
   section: {
-    marginBottom: 24,
+    marginBottom: 32,
   },
   sectionHeader: {
     fontSize: 20,
     fontWeight: 'bold',
     color: '#333',
     marginLeft: 16,
+    marginBottom: 16,
+  },
+  recipeWrapper: {
+    marginHorizontal: 16,
     marginBottom: 12,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
   footer: {
     backgroundColor: '#fff',
     borderTopWidth: 1,
     borderTopColor: '#e0e0e0',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    boxShadowColor: '#000',
-    boxShadowOffset: { width: 0, height: -2 },
-    boxShadowOpacity: 0.1,
-    boxShadowRadius: 4,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
     elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   footerContent: {
     flexDirection: 'row',
@@ -254,10 +262,10 @@ const styles = StyleSheet.create({
   },
   confirmButton: {
     backgroundColor: '#4CAF50',
-    paddingHorizontal: 24,
-    paddingVertical: 12,
+    paddingHorizontal: 28,
+    paddingVertical: 14,
     borderRadius: 8,
-    minWidth: 160,
+    minWidth: 170,
     alignItems: 'center',
   },
   confirmButtonDisabled: {
