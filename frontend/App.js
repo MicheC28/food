@@ -32,7 +32,7 @@ export default function App() {
           headerTitleAlign: 'center',
           headerTitle: () => <HeaderTitle />,
           headerLeft: () => <HeaderLeft />,
-          tabBarActiveTintColor: '#4CAF50',
+          tabBarActiveTintColor: '#F4964A',
           tabBarInactiveTintColor: '#888',
           tabBarStyle: styles.tabBar,
         }}
@@ -70,7 +70,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#F4964A',
     height: 70,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },

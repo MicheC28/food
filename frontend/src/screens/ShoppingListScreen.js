@@ -88,7 +88,7 @@ const ShoppingListScreen = () => {
   if (loading) {
     return (
       <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#4CAF50" />
+        <ActivityIndicator size="large" color="#F4964A" />
         <Text style={styles.loadingText}>Loading shopping list...</Text>
       </View>
     );
@@ -114,7 +114,7 @@ const ShoppingListScreen = () => {
       style={styles.container}
       contentContainerStyle={styles.scrollContent}
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#4CAF50']} />
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#F4964A']} />
       }
     >
       <View style={styles.header}>
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   header: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#F4964A',
     padding: 20,
     marginBottom: 16,
   },
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
   },
   headerSubtitle: {
     fontSize: 16,
-    color: '#E8F5E9',
+    color: '#f5b885',
   },
   section: {
     marginBottom: 24,
@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
     borderLeftColor: '#FF9800',
   },
   regularItemCard: {
-    borderLeftColor: '#9E9E9E',
+    borderLeftColor: '#e98883',
   },
   itemHeader: {
     flexDirection: 'row',
@@ -314,11 +314,11 @@ const styles = StyleSheet.create({
   },
   dealMerchant: {
     fontSize: 14,
-    color: '#E65100',
+    color: '#b33951',
   },
   dealValid: {
     fontSize: 12,
-    color: '#BF360C',
+    color: '#b33951',
   },
   footer: {
     padding: 20,

@@ -152,7 +152,7 @@ const GetLatestDealsScreen = ({ navigation }) => {
             <MaterialCommunityIcons
               name="newspaper-variant-multiple"
               size={20}
-              color="#4CAF50"
+              color="#F4964A"
             />
             <Text style={styles.infoText}>
               Find grocery flyers in your area
@@ -163,7 +163,7 @@ const GetLatestDealsScreen = ({ navigation }) => {
             <MaterialCommunityIcons
               name="robot"
               size={20}
-              color="#4CAF50"
+              color="#F4964A"
             />
             <Text style={styles.infoText}>
               AI generates 5 delicious recipes using sale items
@@ -174,7 +174,7 @@ const GetLatestDealsScreen = ({ navigation }) => {
             <MaterialCommunityIcons
               name="checkbox-marked"
               size={20}
-              color="#4CAF50"
+              color="#F4964A"
             />
             <Text style={styles.infoText}>
               Select recipes and create your shopping list
@@ -185,7 +185,7 @@ const GetLatestDealsScreen = ({ navigation }) => {
             <MaterialCommunityIcons
               name="cash"
               size={20}
-              color="#4CAF50"
+              color="#F4964A"
             />
             <Text style={styles.infoText}>
               Save money while eating great food!
@@ -211,7 +211,7 @@ const GetLatestDealsScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#F5DCC7',
   },
 
   content: {
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#b33951',
     textAlign: 'center',
     marginBottom: 12,
     marginTop: 20,
@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
 
   subtitle: {
     fontSize: 16,
-    color: '#666',
+    color: '#F4964A',
     textAlign: 'center',
     marginBottom: 40,
     lineHeight: 24,
@@ -244,14 +244,14 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#333',
+    color: '#b33951',
     marginBottom: 8,
   },
 
   input: {
     backgroundColor: '#fff',
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#F5DCC7',
     borderRadius: 8,
     padding: 16,
     fontSize: 18,
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#F4964A',
     borderRadius: 8,
     padding: 16,
     alignItems: 'center',
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
   },
 
   buttonDisabled: {
-    backgroundColor: '#A5D6A7',
+    backgroundColor: '#E98883',
   },
 
   buttonContent: {
@@ -285,11 +285,11 @@ const styles = StyleSheet.create({
   },
 
   infoBox: {
-    backgroundColor: '#E8F5E9',
+    backgroundColor: '#F5DCC7',
     borderRadius: 8,
     padding: 20,
     borderLeftWidth: 5,
-    borderLeftColor: '#4CAF50',
+    borderLeftColor: '#F4964A',
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 10,
@@ -300,7 +300,7 @@ const styles = StyleSheet.create({
   infoTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#2E7D32',
+    color: '#b33951',
     marginBottom: 16,
     textAlign: 'center',
   },
@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
 
   infoText: {
     fontSize: 15,
-    color: '#1B5E20',
+    color: '#b33951',
     marginLeft: 10,
     flexShrink: 1,
   },
@@ -324,7 +324,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#F4964A',
     zIndex: 10,
     alignItems: 'center',
     justifyContent: 'center',
@@ -340,7 +340,7 @@ const styles = StyleSheet.create({
 
   introSubtitle: {
     fontSize: 30,
-    color: '#E8F5E9',
+    color: '#F5DCC7',
     textAlign: 'center',
     marginBottom: 40,
   },
@@ -353,7 +353,7 @@ const styles = StyleSheet.create({
   },
 
   introButtonText: {
-    color: '#4CAF50',
+    color: '#F4964A',
     fontSize: 18,
     fontWeight: 'bold',
   },

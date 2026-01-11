@@ -256,7 +256,7 @@ Use these for testing:
 ## 🎨 UI Design
 
 ### Color Scheme
-- **Primary Green:** #4CAF50 (buttons, active tabs)
+- **Primary Green:** #F4964A (buttons, active tabs)
 - **Background:** #f5f5f5 (light gray)
 - **Cards:** #fff (white)
 - **Text Primary:** #333 (dark gray)

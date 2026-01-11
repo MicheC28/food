@@ -97,7 +97,7 @@ const RecipesScreen = ({ navigation }) => {
   if (loading) {
     return (
       <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#4CAF50" />
+        <ActivityIndicator size="large" color="#F4964A" />
         <Text style={styles.loadingText}>Loading recipes...</Text>
       </View>
     );
@@ -120,7 +120,7 @@ const RecipesScreen = ({ navigation }) => {
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#4CAF50']} />
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#F4964A']} />
         }
       >
         {thisWeeksRecipes.length > 0 && (
@@ -184,30 +184,30 @@ const RecipesScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#F5DCC7',
   },
   centerContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#SFEDBBE',
   },
   loadingText: {
     marginTop: 12,
     fontSize: 16,
-    color: '#666',
+    color: '#F4964A',
   },
   emptyTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#b33951',
     marginBottom: 12,
     textAlign: 'center',
   },
   emptySubtitle: {
     fontSize: 16,
-    color: '#666',
+    color: '#F4964A',
     textAlign: 'center',
     lineHeight: 24,
   },
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
   sectionHeader: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#b33951',
     marginLeft: 16,
     marginBottom: 16,
   },
@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
   footer: {
     backgroundColor: '#fff',
     borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
+    borderTopColor: '#F5DCC7',
     paddingVertical: 16,
     paddingHorizontal: 20,
     elevation: 8,
@@ -257,11 +257,11 @@ const styles = StyleSheet.create({
   },
   selectionCount: {
     fontSize: 16,
-    color: '#333',
+    color: '#b33951',
     fontWeight: '600',
   },
   confirmButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#F4964A',
     paddingHorizontal: 28,
     paddingVertical: 14,
     borderRadius: 8,
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   confirmButtonDisabled: {
-    backgroundColor: '#A5D6A7',
+    backgroundColor: '#E98883',
   },
   confirmButtonText: {
     color: '#fff',

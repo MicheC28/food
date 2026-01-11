@@ -75,10 +75,10 @@ export default function App() {
 
             return <Ionicons name={iconName} size={size} color={color} />;
           },
-          tabBarActiveTintColor: '#4CAF50',
+          tabBarActiveTintColor: '#F4964A',
           tabBarInactiveTintColor: 'gray',
           headerStyle: {
-            backgroundColor: '#4CAF50',
+            backgroundColor: '#F4964A',
           },
           headerTintColor: '#fff',
           headerTitleStyle: {
@@ -248,7 +248,7 @@ export default function GetDealsScreen({ navigation }) {
 
         {loading && (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#4CAF50" />
+            <ActivityIndicator size="large" color="#F4964A" />
             <Text style={styles.loadingText}>
               Fetching deals and generating recipes...
             </Text>
@@ -308,7 +308,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   button: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#F4964A',
     padding: 18,
     borderRadius: 8,
     alignItems: 'center',
@@ -453,7 +453,7 @@ export default function RecipesScreen() {
   if (loading) {
     return (
       <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#4CAF50" />
+        <ActivityIndicator size="large" color="#F4964A" />
         <Text style={styles.loadingText}>Loading recipes...</Text>
       </View>
     );
@@ -582,7 +582,7 @@ const styles = StyleSheet.create({
     borderTopColor: '#ddd',
   },
   confirmButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#F4964A',
     padding: 18,
     borderRadius: 8,
     alignItems: 'center',
@@ -692,7 +692,7 @@ export default function ShoppingListScreen() {
   if (loading) {
     return (
       <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#4CAF50" />
+        <ActivityIndicator size="large" color="#F4964A" />
         <Text style={styles.loadingText}>Loading shopping list...</Text>
       </View>
     );
@@ -804,7 +804,7 @@ export default function RecipeCard({ recipe, isSelected, onToggle }) {
         <Checkbox
           value={isSelected}
           onValueChange={onToggle}
-          color={isSelected ? '#4CAF50' : undefined}
+          color={isSelected ? '#F4964A' : undefined}
           style={styles.checkbox}
         />
         <TouchableOpacity
@@ -942,7 +942,7 @@ const styles = StyleSheet.create({
   },
   dealsText: {
     fontSize: 14,
-    color: '#4CAF50',
+    color: '#F4964A',
     fontWeight: '600',
   },
 });
@@ -1020,7 +1020,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   dealBadge: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#F4964A',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 4,

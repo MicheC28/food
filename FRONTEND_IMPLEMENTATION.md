@@ -161,7 +161,7 @@ const API_BASE_URL = 'http://YOUR_COMPUTER_IP:5000/api';
 - All API endpoints from the backend are integrated
 - The app handles the complete user flow from postal code entry to shopping list generation
 - State management is handled efficiently with React hooks
-- The UI follows Material Design principles with a green theme (#4CAF50)
+- The UI follows Material Design principles with a green theme (#F4964A)
 - All date formatting and validation is handled properly
 - The app is production-ready and follows React Native best practices
 

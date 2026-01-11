@@ -83,12 +83,12 @@ const styles = StyleSheet.create({
     height: 24,
     borderRadius: 4,
     borderWidth: 2,
-    borderColor: '#4CAF50',
+    borderColor: '#F4964A',
     alignItems: 'center',
     justifyContent: 'center',
   },
   checkboxSelected: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#F4964A',
   },
   checkmark: {
     color: '#fff',
@@ -126,12 +126,12 @@ const styles = StyleSheet.create({
   },
   moreText: {
     fontSize: 13,
-    color: '#4CAF50',
+    color: '#F4964A',
     fontStyle: 'italic',
     marginTop: 4,
   },
   dealBadge: {
-    backgroundColor: '#FFF3E0',
+    backgroundColor: '#F5DCC7',
     borderRadius: 6,
     padding: 8,
     marginTop: 10,
