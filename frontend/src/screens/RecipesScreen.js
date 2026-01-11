@@ -247,7 +247,7 @@ const RecipesScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    backgroundColor: '#F5DCC7',
+    backgroundColor: '#fff',
   },
   centerContainer: {
     flex: 1,
@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
   sectionHeader: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#b33951',
+    color: '#fff',
     marginLeft: 16,
     marginBottom: 16,
   },
@@ -353,7 +353,7 @@ const styles = StyleSheet.create({
   },
   metaContainer: {
     marginBottom: 16,
-    backgroundColor: '#E98883',
+    backgroundColor: '#fff',
     padding: 12,
     borderRadius: 8,
   },
@@ -375,10 +375,11 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
   },
   listItem: {
-    fontSize: 14,
-    color: '#444',
-    lineHeight: 22,
-    marginBottom: 4,
+    fontSize: 16,  // Increased from 14 for better readability
+    color: '#333',  // Darker color for better contrast
+    lineHeight: 24,  // Increased for better line spacing
+    marginBottom: 8,  // Increased from 4 for more space between items
+    paddingLeft: 16,
   },
   dealBadge: {
     backgroundColor: '#FFF3E0',
