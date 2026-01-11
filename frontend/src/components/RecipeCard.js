@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 const RecipeCard = ({ recipe, isSelected, onToggle }) => {
   return (
-    
     <TouchableOpacity 
       style={styles.card}
       onPress={onToggle}
@@ -59,10 +58,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginBottom: 12,
     flexDirection: 'row',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    boxShadowColor: '#000',
+    boxShadowOffset: { width: 0, height: 2 },
+    boxShadowOpacity: 0.1,
+    boxShadowRadius: 4,
     elevation: 3,
   },
   checkboxContainer: {

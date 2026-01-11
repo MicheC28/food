@@ -265,7 +265,8 @@ def generate_recipes():
                 'difficulty': recipe.get('difficulty', 'Easy'),
                 'postal_code': postal_code,
                 'in_list': False,
-                'flyer_deals': flyer_deals
+                'flyer_deals': flyer_deals,
+                'created_at': datetime.now()
             }
             
             result = recipes_collection.insert_one(recipe_doc)

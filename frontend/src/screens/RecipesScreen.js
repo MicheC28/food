@@ -27,7 +27,7 @@ const RecipesScreen = () => {
       const data = await getRecipes();
       // console.log('data from getRecipes:', data);
       const recipesArray = Object.values(data) || [];
-      // console.log('recepies array:', recipesArray);
+      console.log('recepies array:', recipesArray);
       // console.log('type of recipesArray:', typeof recipesArray);
       setRecipes(recipesArray);
       
@@ -86,7 +86,8 @@ const RecipesScreen = () => {
     }
   };
 
-  const thisWeeksRecipes = recipes
+  console.log('All recipes:', recipes);
+  const thisWeeksRecipes = recipes[1]
     .filter(recipe => {
       const createdAt = new Date(recipe.created_at);
       const weekAgo = new Date();
@@ -94,6 +95,8 @@ const RecipesScreen = () => {
       return createdAt >= weekAgo;
     })
     .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+    console.log('This week\'s recipes:', thisWeeksRecipes);
 
   const previousRecipes = recipes
     .filter(recipe => {
@@ -240,10 +243,10 @@ const styles = StyleSheet.create({
     borderTopColor: '#e0e0e0',
     paddingVertical: 12,
     paddingHorizontal: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    boxShadowColor: '#000',
+    boxShadowOffset: { width: 0, height: -2 },
+    boxShadowOpacity: 0.1,
+    boxShadowRadius: 4,
     elevation: 8,
   },
   footerContent: {
