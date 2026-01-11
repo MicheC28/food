@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,10 +8,12 @@ import {
   Alert,
   ActivityIndicator,
   RefreshControl,
+  Modal,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import RecipeCard from '../components/RecipeCard';
-import { getRecipes, updateRecipeSelections } from '../services/api';
+import { getRecipes, updateRecipeSelections, deleteRecipe } from '../services/api';
 
 const RecipesScreen = ({ navigation }) => {
   const [recipes, setRecipes] = useState([]);
@@ -20,47 +22,48 @@ const RecipesScreen = ({ navigation }) => {
   const [selectedRecipeIds, setSelectedRecipeIds] = useState(new Set());
   const [updating, setUpdating] = useState(false);
 
+  const [activeRecipe, setActiveRecipe] = useState(null);
+
   const loadRecipes = async (showLoader = true) => {
     if (showLoader) setLoading(true);
-
+    console.log('loading recipes');
     try {
       const data = await getRecipes();
       const recipesArray = Object.values(data) || [];
       setRecipes(recipesArray);
 
-      const currentlySelected = new Set(
-        recipesArray[1].filter(recipe => recipe.in_list).map(recipe => recipe._id)
+      const selected = new Set(
+        (recipesArray[1] ?? [])
+          .filter(r => r.in_list)
+          .map(r => r._id)
       );
-      setSelectedRecipeIds(currentlySelected);
+
+      setSelectedRecipeIds(selected);
     } catch (error) {
-      console.error('Error loading recipes:', error);
-      Alert.alert('Error', 'Failed to load recipes. Please try again.');
+      Alert.alert('Error', 'Failed to load recipes.');
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      loadRecipes();
-    }, [])
-  );
+  useEffect(() => {
+    loadRecipes();
+    console.log('useeffect');
+  }, []);
+  
 
   const onRefresh = () => {
     setRefreshing(true);
     loadRecipes(false);
   };
+  
 
-  const toggleRecipeSelection = (recipeId) => {
+  const toggleRecipeSelection = (id) => {
     setSelectedRecipeIds(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(recipeId)) {
-        newSet.delete(recipeId);
-      } else {
-        newSet.add(recipeId);
-      }
-      return newSet;
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
     });
   };
 
@@ -78,21 +81,42 @@ const RecipesScreen = ({ navigation }) => {
     }
   };
 
-  const thisWeeksRecipes = (recipes[1] ?? []).filter(recipe => {
-    const createdAt = new Date(recipe.created_at);
-    const weekAgo = new Date();
-    weekAgo.setDate(weekAgo.getDate() - 7);
-    return createdAt >= weekAgo;
-  }).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-  const previousRecipes = (recipes[1] ?? [])
-    .filter(recipe => {
-      const createdAt = new Date(recipe.created_at);
-      const weekAgo = new Date();
-      weekAgo.setDate(weekAgo.getDate() - 7);
-      return createdAt < weekAgo;
-    })
-    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  const handleDeleteRecipe = async (recipeId) => {
+    console.log('deleting in screen', recipeId);
+    try {
+      await deleteRecipe(recipeId);
+      console.log('just deleted recipe');
+      setActiveRecipe(null);
+      loadRecipes();
+    } catch {
+      Alert.alert('Error', 'Failed to delete recipe.');
+    }
+    // Alert.alert(
+    //   'Delete Recipe',
+    //   'Are you sure you want to delete this recipe?',
+    //   [
+    //     { text: 'Cancel', style: 'cancel' },
+    //     {
+    //       text: 'Delete',
+    //       style: 'destructive',
+    //       onPress: async () => {
+    //         try {
+    //           await deleteRecipe(recipeId);
+    //           console.log('just deleted recipe');
+    //           setActiveRecipe(null);
+    //           loadRecipes();
+    //         } catch {
+    //           Alert.alert('Error', 'Failed to delete recipe.');
+    //         }
+    //       },
+    //     },
+    //   ]
+    // );
+  };
+  
+
+  const allRecipes = recipes[1] ?? [];
 
   if (loading) {
     return (
@@ -115,74 +139,113 @@ const RecipesScreen = ({ navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={{ flex: 1 }}>
       <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#F4964A']} />
         }
+        persistentScrollbar={true}          // Always show scrollbar
+        showsVerticalScrollIndicator={true} // Ensure vertical scroll indicator is visible
       >
-        {thisWeeksRecipes.length > 0 && (
-          <View style={styles.section}>
-            <Text style={styles.sectionHeader}>This Week's Recipes</Text>
-            {thisWeeksRecipes.map(recipe => (
-              <View key={recipe._id} style={styles.recipeWrapper}>
-                <RecipeCard
-                  recipe={recipe}
-                  isSelected={selectedRecipeIds.has(recipe._id)}
-                  onToggle={() => toggleRecipeSelection(recipe._id)}
-                />
-              </View>
-            ))}
-          </View>
-        )}
-
-        {previousRecipes.length > 0 && (
-          <View style={styles.section}>
-            <Text style={styles.sectionHeader}>Previously Saved Recipes</Text>
-            {previousRecipes.map(recipe => (
-              <View key={recipe._id} style={styles.recipeWrapper}>
-                <RecipeCard
-                  recipe={recipe}
-                  isSelected={selectedRecipeIds.has(recipe._id)}
-                  onToggle={() => toggleRecipeSelection(recipe._id)}
-                />
-              </View>
-            ))}
-          </View>
-        )}
-
-        <View style={{ height: 100 }} />
+        {allRecipes.map(recipe => (
+          <RecipeCard
+            key={recipe._id}
+            recipe={recipe}
+            isSelected={selectedRecipeIds.has(recipe._id)}
+            onToggleSelect={() => toggleRecipeSelection(recipe._id)}
+            onPressCard={() => setActiveRecipe(recipe)}
+            onDelete={() => handleDeleteRecipe(recipe._id)}
+            />
+        ))}
+        <View style={{ height: 120 }} />
       </ScrollView>
+
 
       {selectedRecipeIds.size > 0 && (
         <View style={styles.footer}>
-          <View style={styles.footerContent}>
-            <Text style={styles.selectionCount}>
-              {selectedRecipeIds.size} recipe{selectedRecipeIds.size !== 1 ? 's' : ''} selected
-            </Text>
-            <TouchableOpacity
-              style={[styles.confirmButton, updating && styles.confirmButtonDisabled]}
-              onPress={handleConfirmSelection}
-              disabled={updating}
-              activeOpacity={0.8}
-            >
-              {updating ? (
-                <ActivityIndicator color="#fff" size="small" />
-              ) : (
-                <Text style={styles.confirmButtonText}>Confirm Selection</Text>
-              )}
-            </TouchableOpacity>
-          </View>
+          <Text>{selectedRecipeIds.size} selected</Text>
+          <TouchableOpacity
+            style={styles.confirmButton}
+            onPress={handleConfirmSelection}
+            disabled={updating}
+          >
+            {updating ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.confirmText}>Confirm</Text>
+            )}
+          </TouchableOpacity>
         </View>
       )}
+
+      {/* ===== MODAL ===== */}
+      <Modal visible={!!activeRecipe} animationType="slide">
+        {activeRecipe && (
+          <View style={styles.modalContainer}>
+            {/* HEADER */}
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>{activeRecipe.name}</Text>
+              {/* <TouchableOpacity onPress={() => handleDeleteRecipe(activeRecipe._id)}>
+                <Ionicons name="trash-outline" size={24} color="red" />
+              </TouchableOpacity> */}
+            </View>
+
+            {/* SCROLLABLE CONTENT */}
+            <ScrollView
+              style={styles.modalScroll}
+              showsVerticalScrollIndicator={true} // Show scrollbar
+              persistentScrollbar={true}          // Make scrollbar persistent (Android)
+            >
+              {/* META INFO */}
+              <View style={styles.metaContainer}>
+                <Text style={styles.metaText}>⏱️ Prep: {activeRecipe.prep_time} • Cook: {activeRecipe.cook_time}</Text>
+                <Text style={styles.metaText}>🍽️ Servings: {activeRecipe.servings} • Difficulty: {activeRecipe.difficulty}</Text>
+                <Text style={styles.metaText}>📍 Postal Code: {activeRecipe.postal_code || 'N/A'}</Text>
+              </View>
+
+              {/* INGREDIENTS */}
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Ingredients</Text>
+                {activeRecipe.ingredients.map((ing, i) => (
+                  <Text key={i} style={styles.listItem}>
+                    • {ing.name} - {ing.quantity}
+                  </Text>
+                ))}
+              </View>
+
+              {/* STEPS */}
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Steps</Text>
+                {activeRecipe.steps.map((step, i) => (
+                  <Text key={i} style={styles.listItem}>
+                    {i + 1}. {step}
+                  </Text>
+                ))}
+              </View>
+
+              {/* FLYER DEALS */}
+              {activeRecipe.flyer_deals && activeRecipe.flyer_deals.length > 0 && (
+                <View style={styles.dealBadge}>
+                  <Text style={styles.dealText}>🏷️ {activeRecipe.flyer_deals.length} items on sale!</Text>
+                </View>
+              )}
+            </ScrollView>
+
+            {/* CLOSE BUTTON */}
+            <TouchableOpacity style={styles.closeButton} onPress={() => setActiveRecipe(null)}>
+              <Text style={styles.closeText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </Modal>
+
+
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  modalContainer: {
     flex: 1,
     backgroundColor: '#F5DCC7',
   },
@@ -251,9 +314,16 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   footerContent: {
+    backgroundColor: '#fefefe',
+    padding: 20,
+  },
+  modalHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+    paddingBottom: 12,
   },
   selectionCount: {
     fontSize: 16,
@@ -263,19 +333,115 @@ const styles = StyleSheet.create({
   confirmButton: {
     backgroundColor: '#F4964A',
     paddingHorizontal: 28,
+  },
+    confirmButtonDisabled: {
+      backgroundColor: '#E98883',
+    },
+    confirmButtonText: {
+      color: '#fff',
+      fontWeight: 'bold',
+      fontSize: 16,
+    },
+  modalTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    flex: 1,
+    color: '#333',
+  },
+  modalScroll: {
+    marginTop: 16,
+  },
+  metaContainer: {
+    marginBottom: 16,
+    backgroundColor: '#F1F8E9',
+    padding: 12,
+    borderRadius: 8,
+  },
+  metaText: {
+    fontSize: 14,
+    color: '#555',
+    marginBottom: 4,
+  },
+  section: {
+    marginBottom: 20,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    paddingBottom: 4,
+  },
+  listItem: {
+    fontSize: 14,
+    color: '#444',
+    lineHeight: 22,
+    marginBottom: 4,
+  },
+  dealBadge: {
+    backgroundColor: '#FFF3E0',
+    borderRadius: 8,
+    padding: 12,
+    marginTop: 10,
+    borderLeftWidth: 4,
+    borderLeftColor: '#FF9800',
+  },
+  dealText: {
+    fontSize: 14,
+    color: '#E65100',
+    fontWeight: '600',
+  },
+  closeButton: {
+    backgroundColor: '#4CAF50',
     paddingVertical: 14,
     borderRadius: 8,
-    minWidth: 170,
     alignItems: 'center',
+    marginTop: 10,
   },
-  confirmButtonDisabled: {
-    backgroundColor: '#E98883',
-  },
-  confirmButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
+  // Footer styles for main screen
+footer: {
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  right: 0,
+  backgroundColor: '#fff',
+  paddingVertical: 16,
+  paddingHorizontal: 20,
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  borderTopWidth: 1,
+  borderTopColor: '#e0e0e0',
+  elevation: 8, // Android shadow
+  shadowColor: '#000', // iOS shadow
+  shadowOffset: { width: 0, height: -2 },
+  shadowOpacity: 0.1,
+  shadowRadius: 4,
+},
+confirmButton: {
+  backgroundColor: '#4CAF50',
+  paddingHorizontal: 28,
+  paddingVertical: 12,
+  borderRadius: 8,
+  minWidth: 120,
+  alignItems: 'center',
+},
+confirmButtonDisabled: {
+  backgroundColor: '#A5D6A7',
+},
+selectionCount: {
+  fontSize: 16,
+  fontWeight: '600',
+  color: '#333',
+},
+confirmText: {
+  color: '#fff',
+  fontSize: 16,
+  fontWeight: 'bold',
+},
+
 });
 
 export default RecipesScreen;

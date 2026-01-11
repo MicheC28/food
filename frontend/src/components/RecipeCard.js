@@ -1,25 +1,57 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { getRecipes, updateRecipeSelections, deleteRecipe } from '../services/api';
 
-const RecipeCard = ({ recipe, isSelected, onToggle }) => {
+
+const RecipeCard = ({ recipe, isSelected, onToggleSelect, onPressCard, onDelete }) => {
   const [showAllIngredients, setShowAllIngredients] = useState(false);
 
   const ingredientsToShow = showAllIngredients
     ? recipe.ingredients
     : recipe.ingredients.slice(0, 5);
 
+    // const handleDelete = async (event) => {
+    //   console.log('del')
+    //   event.stopPropagation(); 
+    //   const response = confirm(
+    //     // 'Delete Recipe',
+    //     'Are you sure you want to delete this recipe?'
+    //     // [
+    //     //   { text: 'Cancel', style: 'cancel' },
+    //     //   { text: 'Delete', style: 'destructive', onPress: () => onDelete(recipe._id) },
+    //     // ]
+    //   );
+
+    //   if(response){
+    //     await deleteRecipe(recipe._id);
+    //     console.log('deleted');
+        
+    //   }
+    // };
+    
+
   return (
     <TouchableOpacity
       style={styles.card}
-      onPress={onToggle}
-      activeOpacity={0.7}
+      activeOpacity={0.8}
+      onPress={onPressCard} // opens modal
     >
+      {/* DELETE BUTTON */}
+      <TouchableOpacity style={styles.deleteButton} onPress={(e) => onDelete(e)}>
+  <Ionicons name="trash-outline" size={22} color="red" />
+</TouchableOpacity>
+
+      {/* CHECKBOX */}
       <View style={styles.checkboxContainer}>
-        <View style={[styles.checkbox, isSelected && styles.checkboxSelected]}>
-          {isSelected && <Text style={styles.checkmark}>✓</Text>}
-        </View>
+        <TouchableOpacity onPress={onToggleSelect} hitSlop={10}>
+          <View style={[styles.checkbox, isSelected && styles.checkboxSelected]}>
+            {isSelected && <Text style={styles.checkmark}>✓</Text>}
+          </View>
+        </TouchableOpacity>
       </View>
 
+      {/* CONTENT */}
       <View style={styles.content}>
         <Text style={styles.recipeName}>{recipe.name}</Text>
 
@@ -67,11 +99,18 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginBottom: 12,
     flexDirection: 'row',
-    boxShadowColor: '#000',
-    boxShadowOffset: { width: 0, height: 2 },
-    boxShadowOpacity: 0.1,
-    boxShadowRadius: 4,
     elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    position: 'relative',
+  },
+  deleteButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    zIndex: 2,
   },
   checkboxContainer: {
     marginRight: 12,

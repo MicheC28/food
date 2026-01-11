@@ -28,6 +28,18 @@ export const getRecipes = async (filters = {}) => {
   return response.data;
 };
 
+export const deleteRecipe = async (recipeId) => {
+  try {
+    console.log("DEKETING API")
+    const response = await api.delete(`/recipes/${recipeId}`);
+    console.log('deleteRecipe response data:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting recipe:', error);
+    throw error;
+  }
+};
+
 export const updateRecipeSelections = async (selectedRecipeIds) => {
   const response = await api.post('/recipes/update-selections', { 
     selected_recipe_ids: selectedRecipeIds 

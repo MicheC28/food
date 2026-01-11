@@ -9,6 +9,8 @@ import json
 from dotenv import load_dotenv
 from google import genai
 from scraper import get_grocery_flyer_id, get_flyer_items
+from flask import request, jsonify
+from bson.objectid import ObjectId
 
 # Load environment variables
 load_dotenv()
@@ -425,6 +427,37 @@ def get_shopping_list():
             'error': str(e)
         }), 500
 
+@app.route('/api/recipes/<recipe_id>', methods=['DELETE'])
+def delete_recipe(recipe_id):
+    """
+    Delete a recipe by its ID.
+    URL: DELETE /api/recipes/<recipe_id>
+    """
+    try:
+        # Convert the string ID to a Mongo ObjectId
+        obj_id = ObjectId(recipe_id)
+
+        # Attempt to delete the recipe
+        result = recipes_collection.delete_one({'_id': obj_id})
+
+        if result.deleted_count == 1:
+            return jsonify({
+                'success': True,
+                'message': f'Recipe {recipe_id} deleted successfully.'
+            }), 200
+        else:
+            return jsonify({
+                'success': False,
+                'error': 'Recipe not found.'
+            }), 404
+
+    except Exception as e:
+        print(f"Error in delete_recipe: {e}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+      
 
 @app.route('/api/health', methods=['GET'])
 def health_check():

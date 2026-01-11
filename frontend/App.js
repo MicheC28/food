@@ -44,7 +44,6 @@ export default function App() {
           component={RecipesScreen}
           options={{
             title: 'My Recipes',
-            tabBarLabel: 'Recipes',
           }}
         />
 
@@ -53,7 +52,7 @@ export default function App() {
           component={ShoppingListScreen}
           options={{
             title: 'Shopping List',
-            tabBarLabel: 'Shopping List',
+            tabBarLabel: 'Shopping List'
           }}
         />
       </Tab.Navigator>
