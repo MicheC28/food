@@ -353,7 +353,7 @@ const styles = StyleSheet.create({
   },
   metaContainer: {
     marginBottom: 16,
-    backgroundColor: '#F1F8E9',
+    backgroundColor: '#E98883',
     padding: 12,
     borderRadius: 8,
   },
@@ -394,7 +394,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   closeButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#f69d55',
     paddingVertical: 14,
     borderRadius: 8,
     alignItems: 'center',
@@ -421,7 +421,7 @@ footer: {
   shadowRadius: 4,
 },
 confirmButton: {
-  backgroundColor: '#4CAF50',
+  backgroundColor: '#f69d55',
   paddingHorizontal: 28,
   paddingVertical: 12,
   borderRadius: 8,
@@ -429,7 +429,7 @@ confirmButton: {
   alignItems: 'center',
 },
 confirmButtonDisabled: {
-  backgroundColor: '#A5D6A7',
+  backgroundColor: '#e98883',
 },
 selectionCount: {
   fontSize: 16,
