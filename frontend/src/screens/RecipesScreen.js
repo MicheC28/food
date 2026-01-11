@@ -25,10 +25,7 @@ const RecipesScreen = () => {
     
     try {
       const data = await getRecipes();
-      // console.log('data from getRecipes:', data);
       const recipesArray = Object.values(data) || [];
-      console.log('recepies array:', recipesArray);
-      // console.log('type of recipesArray:', typeof recipesArray);
       setRecipes(recipesArray);
       
       const currentlySelected = new Set(
@@ -86,7 +83,6 @@ const RecipesScreen = () => {
     }
   };
 
-  console.log('All recipes:', recipes);
   const thisWeeksRecipes = (recipes[1] ?? []).filter(recipe => {
     const createdAt = new Date(recipe.created_at);
     const weekAgo = new Date();
@@ -95,7 +91,7 @@ const RecipesScreen = () => {
   }).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   
 
-  const previousRecipes = recipes
+  const previousRecipes = (recipes[1] ?? [])
     .filter(recipe => {
       const createdAt = new Date(recipe.created_at);
       const weekAgo = new Date();
