@@ -208,7 +208,7 @@ const RecipesScreen = ({ navigation }) => {
                 <Text style={styles.sectionTitle}>Ingredients</Text>
                 {activeRecipe.ingredients.map((ing, i) => (
                   <Text key={i} style={styles.listItem}>
-                    • {ing.name} - {ing.quantity}
+                    {i + 1}. {ing.name} - {ing.quantity}
                   </Text>
                 ))}
               </View>
@@ -323,6 +323,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
+    backgroundColor: '#f69d55',
     paddingBottom: 12,
   },
   selectionCount: {
@@ -343,10 +344,11 @@ const styles = StyleSheet.create({
       fontSize: 16,
     },
   modalTitle: {
-    fontSize: 22,
+    fontSize: 25,
     fontWeight: 'bold',
     flex: 1,
-    color: '#333',
+    color: '#FFF',
+    paddingLeft: 16,
   },
   modalScroll: {
     marginTop: 16,
@@ -358,24 +360,26 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   metaText: {
-    fontSize: 14,
-    color: '#555',
-    marginBottom: 4,
+    fontSize: 16,  
+    color: '#333',  // Darker for better contrast
+    marginBottom: 6,  // Increased spacing
+    lineHeight: 22,  // Better line height
   },
   section: {
     marginBottom: 20,
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 30,
     fontWeight: '600',
-    color: '#333',
+    color: '#222222',
     marginBottom: 8,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
     paddingBottom: 4,
+    paddingLeft: 16,  // Added left padding for alignment
   },
   listItem: {
-    fontSize: 16,  // Increased from 14 for better readability
+    fontSize: 16,  // Increased from 16 for better readability
     color: '#333',  // Darker color for better contrast
     lineHeight: 24,  // Increased for better line spacing
     marginBottom: 8,  // Increased from 4 for more space between items
@@ -388,6 +392,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
     borderLeftWidth: 4,
     borderLeftColor: '#FF9800',
+  },
+    closeText: {
+    color: '#fff',
+    fontSize: 19,
+    fontWeight: 'bold',
   },
   dealText: {
     fontSize: 14,
