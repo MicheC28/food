@@ -13,7 +13,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import RecipeCard from '../components/RecipeCard';
 import { getRecipes, updateRecipeSelections } from '../services/api';
 
-const RecipesScreen = () => {
+const RecipesScreen = ({ navigation }) => {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -68,13 +68,8 @@ const RecipesScreen = () => {
     setUpdating(true);
     try {
       const result = await updateRecipeSelections(Array.from(selectedRecipeIds));
-
-      Alert.alert(
-        'Success!',
-        `Updated ${result.updated_count} recipes. Your shopping list is ready!`
-      );
-
       await loadRecipes(false);
+      navigation.navigate('ShoppingList'); // Navigate on alert OK press
     } catch (error) {
       console.error('Error updating selections:', error);
       Alert.alert('Error', 'Failed to update recipe selections. Please try again.');
@@ -220,29 +215,27 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingVertical: 24,  // increased for breathing room before sections
+    paddingVertical: 24,
   },
   section: {
-    marginBottom: 32,  // more space between sections
+    marginBottom: 32,
   },
   sectionHeader: {
     fontSize: 20,
     fontWeight: 'bold',
     color: '#333',
     marginLeft: 16,
-    marginBottom: 16,  // extra margin below header
+    marginBottom: 16,
   },
   recipeWrapper: {
     marginHorizontal: 16,
     marginBottom: 12,
     backgroundColor: '#fff',
     borderRadius: 8,
-    // Shadow for iOS
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
-    // Elevation for Android
     elevation: 2,
   },
   footer: {
@@ -269,7 +262,7 @@ const styles = StyleSheet.create({
   },
   confirmButton: {
     backgroundColor: '#4CAF50',
-    paddingHorizontal: 28,  // slightly bigger touch target
+    paddingHorizontal: 28,
     paddingVertical: 14,
     borderRadius: 8,
     minWidth: 170,
