@@ -35,3 +35,17 @@ ENV/
 
 # Project specific
 flyer_items.csv
+flyer_items_*.csv
+
+# React Native / Expo
+meal-prep-frontend/node_modules/
+meal-prep-frontend/.expo/
+meal-prep-frontend/.expo-shared/
+meal-prep-frontend/npm-debug.*
+meal-prep-frontend/*.jks
+meal-prep-frontend/*.p8
+meal-prep-frontend/*.p12
+meal-prep-frontend/*.key
+meal-prep-frontend/*.mobileprovision
+meal-prep-frontend/*.orig.*
+meal-prep-frontend/web-build/
