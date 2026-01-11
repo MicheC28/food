@@ -12,13 +12,17 @@ import {
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { generateRecipes } from '../services/api';
+import RecipePreviewModal from '../components/RecipePreviewModal';
 
 const GetLatestDealsScreen = ({ navigation }) => {
   const [postalCode, setPostalCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [placeholder, setPlaceholder] = useState('e.g., M5V 2H1');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [generatedRecipes, setGeneratedRecipes] = useState([]);
 
   const validatePostalCode = (code) => {
+    // Allow spaces or dashes in the middle
     const canadianPostalRegex = /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/;
     return canadianPostalRegex.test(code);
   };
@@ -29,29 +33,30 @@ const GetLatestDealsScreen = ({ navigation }) => {
       return;
     }
 
-    const formattedPostalCode = postalCode.trim().toUpperCase();
-
-    if (!validatePostalCode(formattedPostalCode)) {
+    const trimmedCode = postalCode.trim().toUpperCase();
+    
+    if (!validatePostalCode(trimmedCode)) {
       Alert.alert('Invalid Postal Code', 'Please enter a valid Canadian postal code (e.g., M5V 2H1)');
       return;
     }
 
+    // Remove spaces and dashes for backend (backend expects 6 characters)
+    const formattedPostalCode = trimmedCode.replace(/[\s-]/g, '');
+
     setLoading(true);
     try {
-      const recipes = await generateRecipes(formattedPostalCode);
+      const response = await generateRecipes(formattedPostalCode);
 
-      Alert.alert(
-        'Success!',
-        `Generated ${recipes.length} recipes based on local deals in ${formattedPostalCode}`,
-        [
-          {
-            text: 'View Recipes',
-            onPress: () => navigation.navigate('Recipes'),
-          },
-        ]
-      );
-
-      setPostalCode('');
+      if (response.success && response.recipes && response.recipes.length > 0) {
+        setGeneratedRecipes(response.recipes);
+        setModalVisible(true);
+        setPostalCode('');
+      } else {
+        Alert.alert(
+          'Error',
+          'Failed to generate recipes. Please try again.'
+        );
+      }
     } catch (error) {
       console.error('Error generating recipes:', error);
       Alert.alert(
@@ -127,6 +132,17 @@ const GetLatestDealsScreen = ({ navigation }) => {
           </View>
         </View>
       </View>
+
+      <RecipePreviewModal
+        visible={modalVisible}
+        recipes={generatedRecipes}
+        onClose={() => setModalVisible(false)}
+        onSaveSuccess={() => {
+          console.log('saved');
+          setModalVisible(false); // close popup after save
+          navigation.navigate('Recipes');
+        }}
+      />
     </KeyboardAvoidingView>
   );
 };

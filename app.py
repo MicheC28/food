@@ -240,21 +240,48 @@ def generate_recipes():
                 'error': 'Failed to generate recipes'
             }), 500
         
-        # Convert flyer data to deals format
-        flyer_deals = []
-        for _, row in flyer_df.iterrows():
-            flyer_deals.append({
-                'merchant': row['merchant'],
-                'flyer_id': str(row['flyer_id']),
-                'name': row['name'],
-                'price': float(row['price']) if row['price'] else 0.0,
-                'valid_from': row['valid_from'],
-                'valid_to': row['valid_to']
-            })
+        # Prepare recipes for return (without saving to database)
+        recipe_previews = recipes
+        
+        print(f"Successfully generated {len(recipe_previews)} recipes (not saved yet)")
+        
+        return jsonify({
+            'success': True,
+            'recipes': recipe_previews,
+            'count': len(recipe_previews)
+        }), 200
+        
+    except Exception as e:
+        print(f"Error in generate_recipes: {e}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+
+@app.route('/api/recipes/save', methods=['POST'])
+def save_recipes():
+    """Save selected recipes to database"""
+    try:
+        data = request.get_json()
+        
+        if not data or 'recipes' not in data:
+            return jsonify({
+                'success': False,
+                'error': 'recipes array is required'
+            }), 400
+        
+        recipes_to_save = data['recipes']
+        
+        if not isinstance(recipes_to_save, list) or len(recipes_to_save) == 0:
+            return jsonify({
+                'success': False,
+                'error': 'recipes must be a non-empty array'
+            }), 400
         
         # Store recipes in MongoDB
         stored_recipes = []
-        for recipe in recipes:
+        for recipe in recipes_to_save:
             recipe_doc = {
                 'name': recipe['name'],
                 'ingredients': recipe['ingredients'],
@@ -263,9 +290,9 @@ def generate_recipes():
                 'prep_time': recipe.get('prep_time', '15 minutes'),
                 'servings': recipe.get('servings', 4),
                 'difficulty': recipe.get('difficulty', 'Easy'),
-                'postal_code': postal_code,
+                'postal_code': recipe.get('postal_code'),
                 'in_list': False,
-                'flyer_deals': flyer_deals,
+                'flyer_deals': recipe.get('flyer_deals'),
                 'created_at': datetime.now()
             }
             
@@ -416,6 +443,7 @@ if __name__ == '__main__':
     print(f"✓ MongoDB connected to {MONGODB_DB}")
     print(f"\nAPI Endpoints:")
     print(f"  POST   http://localhost:{port}/api/recipes/generate")
+    print(f"  POST   http://localhost:{port}/api/recipes/save")
     print(f"  GET    http://localhost:{port}/api/recipes")
     print(f"  POST   http://localhost:{port}/api/recipes/update-selections")
     print(f"  GET    http://localhost:{port}/api/recipes/shopping-list")

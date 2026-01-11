@@ -14,6 +14,14 @@ export const generateRecipes = async (postalCode) => {
   return response.data;
 };
 
+export const saveRecipes = async (recipes, postalCode = null, flyerDeals = []) => {
+  const payload = { recipes };
+  if (postalCode) payload.postal_code = postalCode;
+  if (flyerDeals && flyerDeals.length > 0) payload.flyer_deals = flyerDeals;
+  const response = await api.post('/recipes/save', payload);
+  return response.data;
+};
+
 export const getRecipes = async (filters = {}) => {
   const response = await api.get('/recipes', { params: filters });
   // console.log('getRecipes response data:', response.data);
