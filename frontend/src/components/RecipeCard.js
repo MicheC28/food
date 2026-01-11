@@ -39,7 +39,7 @@ const RecipeCard = ({ recipe, isSelected, onToggleSelect, onPressCard, onDelete 
     >
       {/* DELETE BUTTON */}
       <TouchableOpacity style={styles.deleteButton} onPress={(e) => onDelete(e)}>
-  <Ionicons name="trash-outline" size={22} color="red" />
+  <Ionicons name="trash-outline" size={22} color="#b33951" />
 </TouchableOpacity>
 
       {/* CHECKBOX */}

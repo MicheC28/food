@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
   },
   headerSubtitle: {
     fontSize: 16,
-    color: '#f5b885',
+    color: '#fff',
   },
   section: {
     marginBottom: 24,

@@ -211,7 +211,7 @@ const GetLatestDealsScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5DCC7',
+    backgroundColor: '#fff',
   },
 
   content: {
