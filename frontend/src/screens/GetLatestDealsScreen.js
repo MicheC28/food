@@ -17,6 +17,15 @@ const GetLatestDealsScreen = ({ navigation }) => {
   const [postalCode, setPostalCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [placeholder, setPlaceholder] = useState('e.g., M5V 2H1');
+  const [showIntro, setShowIntro] = useState(true);
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: !showIntro,
+      tabBarStyle: showIntro ? { display: 'none' } : undefined,
+    });
+  }, [navigation, showIntro]);
+
 
   const validatePostalCode = (code) => {
     const canadianPostalRegex = /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/;
@@ -32,7 +41,10 @@ const GetLatestDealsScreen = ({ navigation }) => {
     const formattedPostalCode = postalCode.trim().toUpperCase();
 
     if (!validatePostalCode(formattedPostalCode)) {
-      Alert.alert('Invalid Postal Code', 'Please enter a valid Canadian postal code (e.g., M5V 2H1)');
+      Alert.alert(
+        'Invalid Postal Code',
+        'Please enter a valid Canadian postal code (e.g., M5V 2H1)'
+      );
       return;
     }
 
@@ -56,7 +68,8 @@ const GetLatestDealsScreen = ({ navigation }) => {
       console.error('Error generating recipes:', error);
       Alert.alert(
         'Error',
-        error.response?.data?.error || 'Failed to generate recipes. Please try again.'
+        error.response?.data?.error ||
+          'Failed to generate recipes. Please try again.'
       );
     } finally {
       setLoading(false);
@@ -68,6 +81,23 @@ const GetLatestDealsScreen = ({ navigation }) => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
     >
+      {showIntro && (
+        <View style={styles.introOverlay}>
+          <Text style={styles.introTitle}>Recipe Radar</Text>
+          <Text style={styles.introSubtitle}>
+            Discover recipes using grocery deals near you
+          </Text>
+
+          <TouchableOpacity
+            style={styles.introButton}
+            onPress={() => setShowIntro(false)}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.introButtonText}>Start</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
       <View style={styles.content}>
         <Text style={styles.title}>Find Recipes Based on Local Deals</Text>
         <Text style={styles.subtitle}>
@@ -101,7 +131,12 @@ const GetLatestDealsScreen = ({ navigation }) => {
             <ActivityIndicator color="#fff" />
           ) : (
             <View style={styles.buttonContent}>
-              <MaterialCommunityIcons name="chef-hat" size={20} color="#fff" style={{ marginRight: 8 }} />
+              <MaterialCommunityIcons
+                name="chef-hat"
+                size={20}
+                color="#fff"
+                style={{ marginRight: 8 }}
+              />
               <Text style={styles.buttonText}>Generate Recipes</Text>
             </View>
           )}
@@ -109,21 +144,49 @@ const GetLatestDealsScreen = ({ navigation }) => {
 
         <View style={styles.infoBox}>
           <Text style={styles.infoTitle}>How it works:</Text>
+
           <View style={styles.infoRow}>
-            <MaterialCommunityIcons name="newspaper-variant-multiple" size={20} color="#4CAF50" />
-            <Text style={styles.infoText}>Find grocery flyers in your area</Text>
+            <MaterialCommunityIcons
+              name="newspaper-variant-multiple"
+              size={20}
+              color="#4CAF50"
+            />
+            <Text style={styles.infoText}>
+              Find grocery flyers in your area
+            </Text>
           </View>
+
           <View style={styles.infoRow}>
-            <MaterialCommunityIcons name="robot" size={20} color="#4CAF50" />
-            <Text style={styles.infoText}>AI generates 5 delicious recipes using sale items</Text>
+            <MaterialCommunityIcons
+              name="robot"
+              size={20}
+              color="#4CAF50"
+            />
+            <Text style={styles.infoText}>
+              AI generates 5 delicious recipes using sale items
+            </Text>
           </View>
+
           <View style={styles.infoRow}>
-            <MaterialCommunityIcons name="checkbox-marked" size={20} color="#4CAF50" />
-            <Text style={styles.infoText}>Select recipes and create your shopping list</Text>
+            <MaterialCommunityIcons
+              name="checkbox-marked"
+              size={20}
+              color="#4CAF50"
+            />
+            <Text style={styles.infoText}>
+              Select recipes and create your shopping list
+            </Text>
           </View>
+
           <View style={styles.infoRow}>
-            <MaterialCommunityIcons name="cash" size={20} color="#4CAF50" />
-            <Text style={styles.infoText}>Save money while eating great food!</Text>
+            <MaterialCommunityIcons
+              name="cash"
+              size={20}
+              color="#4CAF50"
+            />
+            <Text style={styles.infoText}>
+              Save money while eating great food!
+            </Text>
           </View>
         </View>
       </View>
@@ -136,11 +199,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
+
   content: {
     flex: 1,
     padding: 20,
     justifyContent: 'center',
   },
+
   title: {
     fontSize: 28,
     fontWeight: 'bold',
@@ -149,6 +214,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     marginTop: 20,
   },
+
   subtitle: {
     fontSize: 16,
     color: '#666',
@@ -156,15 +222,18 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     lineHeight: 24,
   },
+
   inputContainer: {
     marginBottom: 24,
   },
+
   label: {
     fontSize: 16,
     fontWeight: '600',
     color: '#333',
     marginBottom: 8,
   },
+
   input: {
     backgroundColor: '#fff',
     borderWidth: 1,
@@ -175,6 +244,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     letterSpacing: 2,
   },
+
   button: {
     backgroundColor: '#4CAF50',
     borderRadius: 8,
@@ -184,18 +254,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
   },
+
   buttonDisabled: {
     backgroundColor: '#A5D6A7',
   },
+
   buttonContent: {
     flexDirection: 'row',
     alignItems: 'center',
   },
+
   buttonText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
   },
+
   infoBox: {
     backgroundColor: '#E8F5E9',
     borderRadius: 8,
@@ -208,6 +282,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 5 },
     elevation: 3,
   },
+
   infoTitle: {
     fontSize: 18,
     fontWeight: '700',
@@ -215,16 +290,58 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     textAlign: 'center',
   },
+
   infoRow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
   },
+
   infoText: {
     fontSize: 15,
     color: '#1B5E20',
     marginLeft: 10,
     flexShrink: 1,
+  },
+
+  introOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: '#4CAF50',
+    zIndex: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 24,
+  },
+
+  introTitle: {
+    fontSize: 80,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginBottom: 12,
+  },
+
+  introSubtitle: {
+    fontSize: 30,
+    color: '#E8F5E9',
+    textAlign: 'center',
+    marginBottom: 40,
+  },
+
+  introButton: {
+    backgroundColor: '#fff',
+    paddingVertical: 14,
+    paddingHorizontal: 40,
+    borderRadius: 30,
+  },
+
+  introButtonText: {
+    color: '#4CAF50',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 
