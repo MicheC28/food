@@ -43,40 +43,44 @@ const ShoppingListScreen = () => {
   const consolidateIngredients = () => {
     const ingredientMap = new Map();
 
-    recipes.forEach(recipe => {
-      recipe.ingredients.forEach(ingredient => {
-        const name = ingredient.name.toLowerCase();
-        
-        if (!ingredientMap.has(name)) {
-          ingredientMap.set(name, {
-            name: ingredient.name,
-            quantity: ingredient.quantity,
-            quantities: [ingredient.quantity],
-            recipes: [recipe.name],
-            deals: [],
+    if (Array.isArray(recipes)) {
+      recipes.forEach(recipe => {
+        if (Array.isArray(recipe.ingredients)) {
+          recipe.ingredients.forEach(ingredient => {
+            const name = ingredient.name.toLowerCase();
+            
+            if (!ingredientMap.has(name)) {
+              ingredientMap.set(name, {
+                name: ingredient.name,
+                quantity: ingredient.quantity,
+                quantities: [ingredient.quantity],
+                recipes: [recipe.name],
+                deals: [],
+              });
+            } else {
+              const existing = ingredientMap.get(name);
+              existing.quantities.push(ingredient.quantity);
+              existing.recipes.push(recipe.name);
+            }
           });
-        } else {
-          const existing = ingredientMap.get(name);
-          existing.quantities.push(ingredient.quantity);
-          existing.recipes.push(recipe.name);
         }
       });
-    });
 
-    recipes.forEach(recipe => {
-      if (recipe.flyer_deals) {
-        recipe.flyer_deals.forEach(deal => {
-          const name = deal.name.toLowerCase();
-          if (ingredientMap.has(name)) {
-            const existing = ingredientMap.get(name);
-            const dealExists = existing.deals.some(d => d.flyer_id === deal.flyer_id);
-            if (!dealExists) {
-              existing.deals.push(deal);
+      recipes.forEach(recipe => {
+        if (recipe.flyer_deals && Array.isArray(recipe.flyer_deals)) {
+          recipe.flyer_deals.forEach(deal => {
+            const name = deal.name.toLowerCase();
+            if (ingredientMap.has(name)) {
+              const existing = ingredientMap.get(name);
+              const dealExists = existing.deals.some(d => d.flyer_id === deal.flyer_id);
+              if (!dealExists) {
+                existing.deals.push(deal);
+              }
             }
-          }
-        });
-      }
-    });
+          });
+        }
+      });
+    }
 
     return Array.from(ingredientMap.values());
   };

@@ -95,8 +95,6 @@ const RecipesScreen = () => {
   }).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   
 
-    console.log('This week\'s recipes:', thisWeeksRecipes);
-
   const previousRecipes = recipes
     .filter(recipe => {
       const createdAt = new Date(recipe.created_at);
