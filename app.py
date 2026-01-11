@@ -25,7 +25,7 @@ if not GEMINI_API_KEY:
 # model = genai.GenerativeModel('gemini-2.5-flash')
 
 # MongoDB Configuration
-MONGODB_URI = os.getenv('MONGODB_URI', 'mongodb+srv://meemz9:dbpass@food-hack.b7nsyy0.mongodb.net/?appName=food-hack')
+MONGODB_URI = os.getenv('MONGODB_URI')
 MONGODB_DB = os.getenv('MONGODB_DB', 'meal_prep_helper')
 
 # Initialize MongoDB client
