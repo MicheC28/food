@@ -1,4 +1,4 @@
-# Meal Prep Helper
+# Recipe Radar
 
 A full-stack mobile application that helps users discover recipes based on current grocery flyer deals in their area and manage shopping lists. Built with Flask backend and React Native (Expo) frontend.
 
@@ -128,14 +128,14 @@ Then:
 2. Enter your postal code (format: A1A1A1, e.g., M5V2H1)
 3. Tap "Get Latest Deals"
 4. Wait for AI to generate 5 recipes based on local deals
-5. View generated recipes in "Recipes" tab
+5. When AI generation is complete you will be taken to the recipes page
+6. You can view generated recipes in "Recipes" tab
 
 ### 2. Select Recipes for Shopping List
 1. Go to "Recipes" tab
 2. Browse "This Week's Recipes" and "Previously Saved Recipes"
 3. Check the boxes next to recipes you want to cook
-4. Tap "Confirm Selection" at the bottom
-5. Your shopping list will be updated
+4. Tap "Confirm Selection" at the bottom to update shopping list and move to shopping list page
 
 ### 3. View Shopping List
 1. Go to "Shopping List" tab
@@ -268,8 +268,22 @@ Feel free to submit issues and enhancement requests!
 
 This project is for educational purposes only. Please note:
 - This is an unofficial tool and is not affiliated with Flipp or Google
-- Use responsibly and respect API terms of service
+- All grocery deal information is sourced from publicly accessible pages available online
+- Use responsibly and respect website terms of service
 - Grocery deal data is owned by Flipp and their partners
+
+## Credits
+
+This project uses code adapted from the open-source project “flippscrape” by Kiizon  
+(https://github.com/Kiizon/flippscrape).
+
+We modified and extended the original code to fit our use case, integrated it into our backend
+pipeline, and built additional application logic and UI during the hackathon.
+
+## AI Tools
+
+- This project uses the Google Gemini API to generate recipes based on extracted grocery deal data.
+- We also used AI-assisted coding tools during development for productivity and debugging.
 
 ## License
 
