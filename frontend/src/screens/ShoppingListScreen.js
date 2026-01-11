@@ -20,7 +20,7 @@ const ShoppingListScreen = () => {
     
     try {
       const data = await getShoppingList();
-      setRecipes(data);
+      setRecipes(Object.values(data));
     } catch (error) {
       console.error('Error loading shopping list:', error);
     } finally {
@@ -42,9 +42,9 @@ const ShoppingListScreen = () => {
 
   const consolidateIngredients = () => {
     const ingredientMap = new Map();
+    const recipesArray = Object.values(recipes[1]);
 
-    if (Array.isArray(recipes)) {
-      recipes.forEach(recipe => {
+        recipesArray.forEach(recipe => {
         if (Array.isArray(recipe.ingredients)) {
           recipe.ingredients.forEach(ingredient => {
             const name = ingredient.name.toLowerCase();
@@ -66,7 +66,7 @@ const ShoppingListScreen = () => {
         }
       });
 
-      recipes.forEach(recipe => {
+      recipesArray.forEach(recipe => {
         if (recipe.flyer_deals && Array.isArray(recipe.flyer_deals)) {
           recipe.flyer_deals.forEach(deal => {
             const name = deal.name.toLowerCase();
@@ -80,7 +80,7 @@ const ShoppingListScreen = () => {
           });
         }
       });
-    }
+    
 
     return Array.from(ingredientMap.values());
   };
