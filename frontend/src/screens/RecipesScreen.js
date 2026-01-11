@@ -87,14 +87,13 @@ const RecipesScreen = () => {
   };
 
   console.log('All recipes:', recipes);
-  const thisWeeksRecipes = recipes[1]
-    .filter(recipe => {
-      const createdAt = new Date(recipe.created_at);
-      const weekAgo = new Date();
-      weekAgo.setDate(weekAgo.getDate() - 7);
-      return createdAt >= weekAgo;
-    })
-    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  const thisWeeksRecipes = (recipes[1] ?? []).filter(recipe => {
+    const createdAt = new Date(recipe.created_at);
+    const weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 7);
+    return createdAt >= weekAgo;
+  }).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  
 
     console.log('This week\'s recipes:', thisWeeksRecipes);
 
