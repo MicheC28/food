@@ -214,14 +214,14 @@ const styles = StyleSheet.create({
     padding: 24,
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
-    backgroundColor: '#F1F8F4',
+    backgroundColor: '#FFF0E0',
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
   },
   modalTitle: {
     fontSize: 26,
     fontWeight: 'bold',
-    color: '#2E7D32',
+    color: '#F4964A',
     marginBottom: 8,
     textAlign: 'center',
   },
@@ -254,8 +254,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   recipeCardSelected: {
-    borderColor: '#4CAF50',
-    backgroundColor: '#F1F8F4',
+    borderColor: '#F4964A',
+    backgroundColor: '#FFF0E0',
   },
   checkboxContainer: {
     marginRight: 12,
@@ -267,12 +267,12 @@ const styles = StyleSheet.create({
     height: 24,
     borderRadius: 4,
     borderWidth: 2,
-    borderColor: '#4CAF50',
+    borderColor: '#F4964A',
     alignItems: 'center',
     justifyContent: 'center',
   },
   checkboxSelected: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#F4964A',
   },
   checkmark: {
     color: '#fff',
@@ -290,7 +290,7 @@ const styles = StyleSheet.create({
   recipeNumber: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#4CAF50',
+    color: '#F4964A',
     marginRight: 12,
     minWidth: 32,
   },
@@ -335,7 +335,7 @@ const styles = StyleSheet.create({
   },
   ingredientBullet: {
     fontSize: 16,
-    color: '#4CAF50',
+    color: '#F4964A',
     marginRight: 8,
     fontWeight: 'bold',
   },
@@ -352,7 +352,7 @@ const styles = StyleSheet.create({
   },
   moreText: {
     fontSize: 13,
-    color: '#4CAF50',
+    color: '#F4964A',
     fontStyle: 'italic',
     marginTop: 4,
     fontWeight: '500',
@@ -392,13 +392,13 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     flex: 1,
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#F4964A',
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
   },
   saveButtonDisabled: {
-    backgroundColor: '#A5D6A7',
+    backgroundColor: '#FFF0E0',
   },
   saveButtonText: {
     color: '#fff',
