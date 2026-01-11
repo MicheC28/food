@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 const RecipeCard = ({ recipe, isSelected, onToggle }) => {
+  const [showAllIngredients, setShowAllIngredients] = useState(false);
+
+  const ingredientsToShow = showAllIngredients
+    ? recipe.ingredients
+    : recipe.ingredients.slice(0, 5);
+
   return (
-    <TouchableOpacity 
+    <TouchableOpacity
       style={styles.card}
       onPress={onToggle}
       activeOpacity={0.7}
@@ -13,10 +19,10 @@ const RecipeCard = ({ recipe, isSelected, onToggle }) => {
           {isSelected && <Text style={styles.checkmark}>✓</Text>}
         </View>
       </View>
-      
+
       <View style={styles.content}>
         <Text style={styles.recipeName}>{recipe.name}</Text>
-        
+
         <View style={styles.metaInfo}>
           <Text style={styles.metaText}>
             ⏱️ {recipe.prep_time} prep • {recipe.cook_time} cook
@@ -25,19 +31,22 @@ const RecipeCard = ({ recipe, isSelected, onToggle }) => {
             🍽️ {recipe.servings} servings • {recipe.difficulty}
           </Text>
         </View>
-        
+
         <Text style={styles.sectionTitle}>Ingredients:</Text>
-        {recipe.ingredients.slice(0, 5).map((ingredient, index) => (
+        {ingredientsToShow.map((ingredient, index) => (
           <Text key={index} style={styles.ingredientText}>
             • {ingredient.name} - {ingredient.quantity}
           </Text>
         ))}
-        {recipe.ingredients.length > 5 && (
-          <Text style={styles.moreText}>
-            + {recipe.ingredients.length - 5} more ingredients...
-          </Text>
+
+        {recipe.ingredients.length > 5 && !showAllIngredients && (
+          <TouchableOpacity onPress={() => setShowAllIngredients(true)}>
+            <Text style={styles.moreText}>
+              + {recipe.ingredients.length - 5} more ingredients...
+            </Text>
+          </TouchableOpacity>
         )}
-        
+
         {recipe.flyer_deals && recipe.flyer_deals.length > 0 && (
           <View style={styles.dealBadge}>
             <Text style={styles.dealText}>
