@@ -10,12 +10,13 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { generateRecipes } from '../services/api';
 
 const GetLatestDealsScreen = ({ navigation }) => {
   const [postalCode, setPostalCode] = useState('');
   const [loading, setLoading] = useState(false);
-  const [placeholder, setPlaceholder] = useState('e.g., M5V 2H1'); 
+  const [placeholder, setPlaceholder] = useState('e.g., M5V 2H1');
 
   const validatePostalCode = (code) => {
     const canadianPostalRegex = /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/;
@@ -29,7 +30,7 @@ const GetLatestDealsScreen = ({ navigation }) => {
     }
 
     const formattedPostalCode = postalCode.trim().toUpperCase();
-    
+
     if (!validatePostalCode(formattedPostalCode)) {
       Alert.alert('Invalid Postal Code', 'Please enter a valid Canadian postal code (e.g., M5V 2H1)');
       return;
@@ -38,7 +39,7 @@ const GetLatestDealsScreen = ({ navigation }) => {
     setLoading(true);
     try {
       const recipes = await generateRecipes(formattedPostalCode);
-      
+
       Alert.alert(
         'Success!',
         `Generated ${recipes.length} recipes based on local deals in ${formattedPostalCode}`,
@@ -49,7 +50,7 @@ const GetLatestDealsScreen = ({ navigation }) => {
           },
         ]
       );
-      
+
       setPostalCode('');
     } catch (error) {
       console.error('Error generating recipes:', error);
@@ -76,36 +77,54 @@ const GetLatestDealsScreen = ({ navigation }) => {
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Postal Code</Text>
           <TextInput
-          style={styles.input}
-          placeholder={placeholder}  // Use state instead of string
-          value={postalCode}
-          onChangeText={setPostalCode}
-          onFocus={() => setPlaceholder('')}  // Clear on focus
-          onBlur={() => { if (!postalCode.trim()) setPlaceholder('e.g., M5V 2H1'); }}  // Restore if empty
-          autoCapitalize="characters"
-          maxLength={7}
-          editable={!loading}
-        />
+            style={styles.input}
+            placeholder={placeholder}
+            value={postalCode}
+            onChangeText={setPostalCode}
+            onFocus={() => setPlaceholder('')}
+            onBlur={() => {
+              if (!postalCode.trim()) setPlaceholder('e.g., M5V 2H1');
+            }}
+            autoCapitalize="characters"
+            maxLength={7}
+            editable={!loading}
+          />
         </View>
 
         <TouchableOpacity
           style={[styles.button, loading && styles.buttonDisabled]}
           onPress={handleGenerateRecipes}
           disabled={loading}
+          activeOpacity={0.8}
         >
           {loading ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.buttonText}>Generate Recipes</Text>
+            <View style={styles.buttonContent}>
+              <MaterialCommunityIcons name="chef-hat" size={20} color="#fff" style={{ marginRight: 8 }} />
+              <Text style={styles.buttonText}>Generate Recipes</Text>
+            </View>
           )}
         </TouchableOpacity>
 
         <View style={styles.infoBox}>
           <Text style={styles.infoTitle}>How it works:</Text>
-          <Text style={styles.infoText}>1. We'll find grocery flyers in your area</Text>
-          <Text style={styles.infoText}>2. AI generates 5 delicious recipes using sale items</Text>
-          <Text style={styles.infoText}>3. Select recipes and create your shopping list</Text>
-          <Text style={styles.infoText}>4. Save money while eating great food!</Text>
+          <View style={styles.infoRow}>
+            <MaterialCommunityIcons name="newspaper-variant-multiple" size={20} color="#4CAF50" />
+            <Text style={styles.infoText}>Find grocery flyers in your area</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <MaterialCommunityIcons name="robot" size={20} color="#4CAF50" />
+            <Text style={styles.infoText}>AI generates 5 delicious recipes using sale items</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <MaterialCommunityIcons name="checkbox-marked" size={20} color="#4CAF50" />
+            <Text style={styles.infoText}>Select recipes and create your shopping list</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <MaterialCommunityIcons name="cash" size={20} color="#4CAF50" />
+            <Text style={styles.infoText}>Save money while eating great food!</Text>
+          </View>
         </View>
       </View>
     </KeyboardAvoidingView>
@@ -128,6 +147,7 @@ const styles = StyleSheet.create({
     color: '#333',
     textAlign: 'center',
     marginBottom: 12,
+    marginTop: 20,
   },
   subtitle: {
     fontSize: 16,
@@ -161,9 +181,15 @@ const styles = StyleSheet.create({
     padding: 16,
     alignItems: 'center',
     marginBottom: 32,
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   buttonDisabled: {
     backgroundColor: '#A5D6A7',
+  },
+  buttonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   buttonText: {
     color: '#fff',
@@ -173,21 +199,32 @@ const styles = StyleSheet.create({
   infoBox: {
     backgroundColor: '#E8F5E9',
     borderRadius: 8,
-    padding: 16,
-    borderLeftWidth: 4,
+    padding: 20,
+    borderLeftWidth: 5,
     borderLeftColor: '#4CAF50',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 5 },
+    elevation: 3,
   },
   infoTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 18,
+    fontWeight: '700',
     color: '#2E7D32',
-    marginBottom: 12,
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
   },
   infoText: {
-    fontSize: 14,
+    fontSize: 15,
     color: '#1B5E20',
-    marginBottom: 6,
-    lineHeight: 20,
+    marginLeft: 10,
+    flexShrink: 1,
   },
 });
 
