@@ -15,6 +15,7 @@ import { generateRecipes } from '../services/api';
 const GetLatestDealsScreen = ({ navigation }) => {
   const [postalCode, setPostalCode] = useState('');
   const [loading, setLoading] = useState(false);
+  const [placeholder, setPlaceholder] = useState('e.g., M5V 2H1'); 
 
   const validatePostalCode = (code) => {
     const canadianPostalRegex = /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/;
@@ -75,14 +76,16 @@ const GetLatestDealsScreen = ({ navigation }) => {
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Postal Code</Text>
           <TextInput
-            style={styles.input}
-            placeholder="e.g., M5V 2H1"
-            value={postalCode}
-            onChangeText={setPostalCode}
-            autoCapitalize="characters"
-            maxLength={7}
-            editable={!loading}
-          />
+          style={styles.input}
+          placeholder={placeholder}  // Use state instead of string
+          value={postalCode}
+          onChangeText={setPostalCode}
+          onFocus={() => setPlaceholder('')}  // Clear on focus
+          onBlur={() => { if (!postalCode.trim()) setPlaceholder('e.g., M5V 2H1'); }}  // Restore if empty
+          autoCapitalize="characters"
+          maxLength={7}
+          editable={!loading}
+        />
         </View>
 
         <TouchableOpacity
