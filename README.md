@@ -274,7 +274,7 @@ This project is for educational purposes only. Please note:
 
 ## Credits
 
-This project uses code adapted from the open-source project “flippscrape” by Kiizon  
+This project uses code adapted from the public project “flippscrape” by Kiizon  
 (https://github.com/Kiizon/flippscrape).
 
 We modified and extended the original code to fit our use case, integrated it into our backend
